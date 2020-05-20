@@ -5,7 +5,6 @@ int main() {
 
 
     Board testBoard;
-    //testBoard.createVectors();
     testBoard.generateBoard();
     testBoard.printBoard();
 
