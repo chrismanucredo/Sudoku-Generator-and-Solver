@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+#ignoring complete folder
+/cmake-build-debug/*
