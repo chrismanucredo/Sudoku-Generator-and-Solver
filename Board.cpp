@@ -80,7 +80,7 @@ void Board::generateBoard() {
 
                     //backtracking if no numbers can be filled after trying every number that is in the current
                     //cell vector
-                    if (repetitionCounter > cellVectors[i].size()){
+                    if (repetitionCounter > cellVectors[i].size()-1){
 
                         //resetting the current cellvector
                         fillNumbersVector(sudokuSize);
@@ -99,7 +99,7 @@ void Board::generateBoard() {
                         totalNumber = (totalNumber / sudokuSize) * 9;
                         eraseCell(totalNumber);
 
-                        //taking a step back one cell
+                        //taking a step back by one cell
                         i = i - 1;
                         j = 0;
                         totalNumber = totalNumber - sudokuSize;
@@ -144,6 +144,7 @@ void Board::fillNumbersVector(int batchSize) {
         numberVector.push_back(i);
     }
 
+    //shuffles the vector
     int sizeOfVector = numberVector.size();
     for (int k = 0; k < sizeOfVector; ++k) { //shuffle the vector
         int r = k + rand() % (sizeOfVector - k);
@@ -176,6 +177,41 @@ void Board::eraseCell(int totalNumber) {
             allNumbers[l][k] = 0;
         }
     }
+}
+
+//creates a puzzle from a generated sudoku chart
+//difficulty is between 1 - 4 with 1 being the hardest.
+void Board::createPuzzle(int difficulty) {
+
+    int randomNumber;
+    int counter = 0;
+    int totalSudokuSize = sudokuSize * sudokuSize;
+    bool breaker = false;
+
+    for (int i = 0; i < sudokuSize; ++i) {
+        if (breaker){
+            break;
+        }
+        for (int j = 0; j < sudokuSize; ++j) {
+
+            randomNumber = rand() % 5;
+
+            if (randomNumber >= difficulty){
+
+                allNumbers[i][j] = 0;
+                counter++;
+
+                if((totalSudokuSize - counter) == 17){
+                    breaker = true;
+                    break;
+                }
+
+            }
+        }
+    }
+
+    std::cout << "This many numbers have been deleted: " << counter << std::endl;
+
 }
 
 

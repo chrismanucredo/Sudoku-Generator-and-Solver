@@ -24,6 +24,11 @@ int main() {
     std::cout << std::endl;
     std::cout << "Generating the sudoku board took: " << duration.count() << " ms" << std::endl;
 
+    //create the puzzle
+    std::cout << std::endl;
+    newBoard.createPuzzle(1);
+    newBoard.printBoard();
+
 
     return 0;
 }

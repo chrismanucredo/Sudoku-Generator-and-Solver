@@ -19,6 +19,7 @@ public:
     Board();
     void printBoard();  //prints the completed sudoku board
     void generateBoard();   //generates a sudoku board
+    void createPuzzle(int difficulty);    //transforms a coherent sudoku board to a puzzle
 
 private:
 
