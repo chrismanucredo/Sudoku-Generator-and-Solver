@@ -26,9 +26,12 @@ int main() {
 
     //create the puzzle
     std::cout << std::endl;
-    newBoard.createPuzzle(1);
+    newBoard.createPuzzle(4);
     newBoard.printBoard();
 
+    //solve the puzzle
+    newBoard.solvePuzzle();
+    newBoard.printBoard();
 
     return 0;
 }

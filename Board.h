@@ -2,8 +2,8 @@
 // Created by Christoph Manucredo on 10.05.20.
 //
 #include <iostream>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 #include <cmath>
 #include <vector>
 #include <random>
@@ -20,6 +20,7 @@ public:
     void printBoard();  //prints the completed sudoku board
     void generateBoard();   //generates a sudoku board
     void createPuzzle(int difficulty);    //transforms a coherent sudoku board to a puzzle
+    void solvePuzzle();
 
 private:
 
