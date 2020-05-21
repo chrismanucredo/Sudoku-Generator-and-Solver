@@ -3,10 +3,14 @@
 
 int main() {
 
+    //initializing a board
+    Board newBoard;
 
-    Board testBoard;
-    testBoard.generateBoard();
-    testBoard.printBoard();
+    //creating a coherent sudoku board
+    newBoard.generateBoard();
+
+    //printing the board
+    newBoard.printBoard();
 
 
     return 0;

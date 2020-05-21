@@ -26,7 +26,7 @@ private:
     const int sudokuPatch = std::sqrt(sudokuSize);
     int allNumbers[sudokuSize][sudokuSize];
 
-    std::vector<int> nineNumbers;
+    std::vector<int> numberVector;
 
     bool checkRow(int colNumber, int value);
     bool checkColumn(int rowNumber, int value);
