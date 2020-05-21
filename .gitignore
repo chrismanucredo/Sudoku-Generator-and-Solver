@@ -33,3 +33,4 @@
 
 #ignoring complete folder
 /cmake-build-debug/*
+/.idea/*
