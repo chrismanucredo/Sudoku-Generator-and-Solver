@@ -217,34 +217,47 @@ void Board::createPuzzle(int difficulty) {
 void Board::solvePuzzle() {
     int totalNumber = 0;
     int zeroCounter;
-    bool allNumbersFound = false;
+    bool numberFound = false;
+    int repetitionCounter;
+
+    createVectors();
 
     for (int i = 0; i < sudokuSize; ++i) {
         zeroCounter = 0;
-        while (!allNumbersFound) {
-            for (int j = 0; j < sudokuSize; ++j) {
-                    //probably way too complicated way to determine where in the board we are at the moment
-                    int row = (totalNumber / sudokuPatch) % sudokuSize;
-                    int col = (totalNumber % sudokuPatch) % sudokuSize +
-                              (totalNumber / (sudokuPatch * sudokuSize)) * sudokuPatch;
 
-                    if (allNumbers[row][col] == 0) {
-                        zeroCounter++;
-                    } else {
-                        for (int k = 0; k < cellVectors[i].size(); ++k) {
-                           if (allNumbers[row][col] == cellVectors[i][0]){
-                               cellVectors[i].erase(cellVectors[i].begin());
-                           } else {
-                               int temp = cellVectors[i][0];
-                               cellVectors[i].erase(cellVectors[i].begin());
-                               cellVectors[i].push_back(temp);
-                           }
-                        }
-                    }
-                    if (cellVectors[i].size() == sudokuSize - zeroCounter){
-                        allNumbersFound = true;
-                    }
+        for (int j = 0; j < sudokuSize; ++j) {
+
+            numberFound = false;
+            repetitionCounter = 0;
+
+
+
+            while (!numberFound && (repetitionCounter < sudokuSize)) {
+                //probably way too complicated way to determine where in the board we are at the moment
+                int row = (totalNumber / sudokuPatch) % sudokuSize;
+                int col = (totalNumber % sudokuPatch) % sudokuSize +
+                          (totalNumber / (sudokuPatch * sudokuSize)) * sudokuPatch;
+
+
+                if (allNumbers[row][col] == 0){
+                    zeroCounter++;
+                    break;
+                }
+
+                if(cellVectors[i][0] == allNumbers[row][col]){
+                    cellVectors[i].erase(cellVectors[i].begin());
+                    numberFound = true;
+                } else {
+                    int temp = cellVectors[i][0];
+                    cellVectors[i].erase(cellVectors[i].begin());
+                    cellVectors[i].push_back(temp);
+                }
+
+
+
+
             }
+            totalNumber = totalNumber + 1;
         }
     }
 }
