@@ -22,7 +22,7 @@ Board::Board() {
 
 //prints the board
 void Board::printBoard() {
-    std::cout << "BOARD INCOMING" << std::endl;
+
     for (int i = 0; i < sudokuSize; ++i) {
         if (i % sudokuPatch == 0){
             std::cout << "-------------------------" << std::endl;
@@ -37,7 +37,7 @@ void Board::printBoard() {
     }
 
     std::cout << "-------------------------" << std::endl;
-    std::cout << "BOARD COMPLETED" << std::endl;
+
 }
 
 //this is the actual board generation
@@ -50,7 +50,7 @@ void Board::generateBoard() {
     int totalNumber = 0;
 
     //is used to keep track of when "backtracking" should occur
-    int repetitionCounter;
+    int repetitionCounter = 0;
 
     //iterates over the cells - not over rows and columns
     for (int i = 0; i < sudokuSize; ++i) {
@@ -179,6 +179,19 @@ void Board::eraseCell(int totalNumber) {
     }
 }
 
+void Board::refillCell(int totalNumber) {
+
+    int row = (totalNumber / sudokuPatch) % sudokuSize;
+    int col = (totalNumber % sudokuPatch) % sudokuSize +
+              (totalNumber / (sudokuPatch * sudokuSize)) * sudokuPatch;
+
+    for (int l = row; l < row + sudokuPatch; ++l) {
+        for (int k = col; k < col + sudokuPatch; ++k) {
+            allNumbers[l][k] = originalNumbers[l][k];
+        }
+    }
+}
+
 //creates a puzzle from a generated sudoku chart
 //difficulty is between 1 - 4 with 1 being the hardest.
 void Board::createPuzzle(int difficulty) {
@@ -205,7 +218,6 @@ void Board::createPuzzle(int difficulty) {
                     breaker = true;
                     break;
                 }
-
             }
         }
     }
@@ -214,16 +226,15 @@ void Board::createPuzzle(int difficulty) {
 
 }
 
-void Board::solvePuzzle() {
+void Board::findMissingNumbers() {
     int totalNumber = 0;
-    int zeroCounter;
     bool numberFound = false;
     int repetitionCounter;
 
     createVectors();
 
     for (int i = 0; i < sudokuSize; ++i) {
-        zeroCounter = 0;
+
 
         for (int j = 0; j < sudokuSize; ++j) {
 
@@ -238,9 +249,7 @@ void Board::solvePuzzle() {
                 int col = (totalNumber % sudokuPatch) % sudokuSize +
                           (totalNumber / (sudokuPatch * sudokuSize)) * sudokuPatch;
 
-
                 if (allNumbers[row][col] == 0){
-                    zeroCounter++;
                     break;
                 }
 
@@ -253,12 +262,156 @@ void Board::solvePuzzle() {
                     cellVectors[i].push_back(temp);
                 }
 
-
-
-
             }
             totalNumber = totalNumber + 1;
         }
+    }
+
+    missingNumbersVec.clear();
+    for (int m = 0; m < sudokuSize; ++m) {
+        missingNumbersVec.push_back(cellVectors[m]);
+    }
+
+    for (int l = 0; l < sudokuSize; ++l) {
+        for (int i = 0; i < sudokuSize; ++i) {
+            originalNumbers[l][i] = allNumbers[l][i];
+        }
+    }
+
+
+
+}
+
+void Board::solvePuzzle() {
+
+    int stupidCounter = 0;
+
+    //this bool is used to track if a number fits in the current place
+    bool numberFound = false;
+
+    //is used to track which place in the board is being handled
+    int totalNumber = 0;
+
+    //is used to keep track of when "backtracking" should occur
+    int repetitionCounter = 0;
+
+    //original Puzzle
+    for (int l = 0; l < sudokuSize; ++l) {
+        for (int i = 0; i < sudokuSize; ++i) {
+            allNumbers[l][i] = originalNumbers[l][i];
+        }
+    }
+
+    //copy missing numbers
+    cellVectors.clear();
+    for (int m = 0; m < sudokuSize; ++m) {
+        cellVectors.push_back(missingNumbersVec[m]);
+    }
+
+    //jumble missing numbers vec
+    for (int n = 0; n < sudokuSize; ++n) {
+        jumbleVectors(n);
+    }
+
+    //iterates over the cells - not over rows and columns
+    for (int i = 0; i < sudokuSize; ++i) {
+
+        for (int j = 0; j < sudokuSize; ++j) {
+
+            numberFound = false;
+            repetitionCounter = 0;
+
+            while(!numberFound){
+                //
+
+                //probably way too complicated way to determine where in the board we are at the moment
+                int row = (totalNumber / sudokuPatch) % sudokuSize;
+                int col = (totalNumber % sudokuPatch) % sudokuSize +
+                          (totalNumber / (sudokuPatch * sudokuSize)) * sudokuPatch;
+
+                if (allNumbers[row][col] != 0){
+                    totalNumber = totalNumber + 1;
+                    break;
+                }
+
+                if (checkRow(row, cellVectors[i][0]) && checkColumn(col, cellVectors[i][0])){
+                    allNumbers[row][col] = cellVectors[i][0];
+                    cellVectors[i].erase(cellVectors[i].begin());
+                    numberFound = true;
+                    totalNumber = totalNumber + 1;
+
+                } else {
+                    int temp = cellVectors[i][0];
+                    cellVectors[i].erase(cellVectors[i].begin());
+                    cellVectors[i].push_back(temp);
+                    repetitionCounter++;
+
+                    //starting backtracking
+                    if (repetitionCounter > cellVectors[i].size()) {
+                        stupidCounter++;
+
+
+                        //reset current cell vector
+                        cellVectors[i].clear();
+                        for (int k = 0; k < missingNumbersVec[i].size(); ++k) {
+                            cellVectors[i].push_back(missingNumbersVec[i][k]);
+                        }
+
+                        totalNumber = (totalNumber / sudokuSize) * 9;
+                        refillCell(totalNumber);
+
+
+                        //jumble the current vector
+                        jumbleVectors(i);
+
+                        //taking a step back by one cell
+                        i = i - 1;
+                        j = 0;
+                        totalNumber = totalNumber - sudokuSize;
+
+                        if (totalNumber < 0){
+                            totalNumber = 0;
+                        }
+
+                        if (i < 0){
+                            i = 0;
+                        }
+
+                        //reset previous vector
+                        cellVectors[i].clear();
+                        for (int k = 0; k < missingNumbersVec[i].size(); ++k) {
+                            cellVectors[i].push_back(missingNumbersVec[i][k]);
+                        }
+
+                        //jumble the previous vector
+                        jumbleVectors(i);
+
+                        refillCell(totalNumber);
+
+                        if (stupidCounter > sudokuSize * 2){
+                            solvePuzzle();
+                            stupidCounter = 0;
+                        }
+
+
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Board::jumbleVectors(int cellNumber) {
+
+    //shuffles the vector
+    int sizeOfVector;
+
+    sizeOfVector = cellVectors[cellNumber].size();
+    for (int i = 0; i < sizeOfVector; ++i) {
+        int r = i + rand() % (sizeOfVector - i);
+        std::swap(cellVectors[cellNumber][i], cellVectors[cellNumber][r]);
+
     }
 }
 

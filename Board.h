@@ -20,13 +20,15 @@ public:
     void printBoard();  //prints the completed sudoku board
     void generateBoard();   //generates a sudoku board
     void createPuzzle(int difficulty);    //transforms a coherent sudoku board to a puzzle
+    void findMissingNumbers();
     void solvePuzzle();
 
 private:
 
     static const int sudokuSize = 9;
-    const int sudokuPatch = std::sqrt(sudokuSize);
+    static const int sudokuPatch = 3;
     int allNumbers[sudokuSize][sudokuSize];
+    int originalNumbers[sudokuSize][sudokuSize];
 
     std::vector<int> numberVector;
 
@@ -35,9 +37,12 @@ private:
 
     void fillNumbersVector(int batchSize);
     void eraseCell(int totalNumber);
+    void refillCell(int totalNumber);
     void createVectors();
+    void jumbleVectors(int cellNumber);
 
     std::vector<std::vector<int>> cellVectors;
+    std::vector<std::vector<int>> missingNumbersVec;
 
 };
 
