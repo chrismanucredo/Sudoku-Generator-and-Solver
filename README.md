@@ -10,5 +10,5 @@ Ad. 2)
 The algorithm does not yet generate puzzles that yield unique solutions.
 
 ## Future
-* Efficiently determine the solvability of a given sudoku puzzle.
-* Alter unsolvable sudoku puzzles with as little alterations as possible to make it solvable.
+* Planned: Efficiently determine the solvability of a given sudoku puzzle.
+* Maybe Planned: Alter unsolvable sudoku puzzles with as little alterations as possible to make it solvable.
