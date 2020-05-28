@@ -113,6 +113,12 @@ void Board::generateBoard() {
             }
         }
     }
+    for (int l = 0; l < sudokuSize; ++l) {
+        for (int i = 0; i < sudokuSize; ++i) {
+            finishedBoard[l][i] = allNumbers[l][i];
+        }
+
+    }
 }
 
 //returns false if the number "value" already exists in the column
@@ -413,6 +419,25 @@ void Board::jumbleVectors(int cellNumber) {
         std::swap(cellVectors[cellNumber][i], cellVectors[cellNumber][r]);
 
     }
+}
+
+void Board::checkSolution() {
+    bool uniqueSolution = true;
+
+    for (int i = 0; i < sudokuSize; ++i) {
+        for (int j = 0; j < sudokuSize; ++j) {
+            if (allNumbers[i][j] != finishedBoard[i][j]){
+                uniqueSolution = false;
+            }
+        }
+    }
+
+    if (uniqueSolution) {
+        std::cout << std::endl << "This solution is unique...probably!" << std::endl;
+    } else {
+        std::cout << std::endl << "This solution is  NOT unique!" << std::endl;
+    }
+
 }
 
 

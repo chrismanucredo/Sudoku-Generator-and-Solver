@@ -26,7 +26,7 @@ int main() {
 
     //create the puzzle
     std::cout << std::endl;
-    newBoard.createPuzzle(1);
+    newBoard.createPuzzle(2);
 
     std::cout << std::endl << "This is the generated puzzle:" << std::endl;
     newBoard.printBoard();
@@ -40,6 +40,8 @@ int main() {
 
     std::cout << std::endl << "This is the solution:" << std::endl;
     newBoard.printBoard();
+
+    newBoard.checkSolution();
 
     return 0;
 }
