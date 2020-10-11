@@ -31,7 +31,6 @@ int main() {
     std::cout << std::endl << "This is the generated puzzle:" << std::endl;
     newBoard.printBoard();
 
-
     //finding the missing numbers
     newBoard.findMissingNumbers();
 
